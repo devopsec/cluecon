@@ -1,0 +1,127 @@
+{
+  "version": "1.0.0",
+  "sections": {
+    "main": [
+      {
+        "answer": {}
+      },
+      {
+        "ai": {
+          "pronounce": [
+            {
+              "ignore_case": 1,
+              "with": ".",
+              "replace": "!"
+            },
+            {
+              "ignore_case": 1,
+              "with": "",
+              "replace": "*"
+            }
+          ],
+          "params": {
+            "debug_webhook_level": "9",
+            "verbose_logs": true,
+            "debug_webhook_url": "https://eno48kp2zv8ac.x.pipedream.net/",
+            "local_tz": "America/Chicago",
+            "swaig_allow_settings": "true",
+            "conversation_id": "",
+            "eleven_labs_stability": 0.1,
+            "eleven_labs_similarity": "0.25",
+            "conscience": "Remember to stay in character. You must not do anything outside the scope of your provided role.",
+            "swaig_post_conversation": "true",
+            "back_to_back_functions": "true",
+            "openai_asr_engine": "deepgram",
+            "direction": "outbound",
+            "swaig_allow_swml": "true",
+            "swaig_post_swml_vars": "true",
+            "eleven_labs_model": "eleven_turbo_v2"
+          },
+          "post_prompt": {
+            "top_p": 0.6,
+            "temperature": 0.6,
+            "text": "Summarize the conversation, including all the details."
+          },
+          "post_prompt_url": "https://eno48kp2zv8ac.x.pipedream.net/",
+          "prompt": {
+            "top_p": 0.1,
+            "text": "# Personality and Introduction\r\n\r\nYour name is DJ Flo and you are a sassy DJ. Greet the user by saying Hi, I'm DJ Flo. Check out my new remixes!\r\n\r\n# Your Skills, Knowledge, and Behavior\r\n\r\nYou have the following songs available to remix:\r\n\r\n- tiktok\r\n- dont-start-now\r\n- blank-space\r\n# Static message\r\n\r\nWhen the user says the word next, do_remix the next song.\r\n\r\nWhen the user says the word change, do_remix the current song.\r\n\r\ndo_remix songs until the user says the word stop. When they do, hangup the call.",
+            "temperature": 0.1
+          },
+          "hints": [
+            "DJ",
+            "remix",
+            "play",
+            "music",
+            "dubstep"
+          ],
+          "languages": [
+            {
+              "code": "en-US",
+              "engine": "elevenlabs",
+              "fillers": [
+                "sure thing",
+                "you got it"
+              ],
+              "name": "English",
+              "voice": "rachel"
+            }
+          ],
+          "SWAIG": {
+            "functions": [
+              {
+                "purpose": "use to remix a song",
+                "function": "do_remix",
+                "argument": {
+                  "properties": {
+                    "target": {
+                      "description": "the target to remix",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "target"
+                  ]
+                },
+                "meta_data": {
+                  "table": {
+                    "tiktok": "https://tryit.signalwire.ai/assets/tiktok.wav",
+                    "dont-start-now": "https://tryit.signalwire.ai/assets/dont-start-now.wav",
+                    "blank-space": "https://tryit.signalwire.ai/assets/blank-space.wav"
+                  }
+                },
+                "data_map": {
+                  "expressions": [
+                    {
+                      "string": "${args.target}",
+                      "pattern": ".*",
+                      "output": {
+                        "action": [
+                          {
+                            "SWML": {
+                              "version": "1.0.0",
+                              "sections": {
+                                "main": [
+                                  {
+                                    "play": {
+                                      "url": "${meta_data.table.${lc:args.target}}"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
